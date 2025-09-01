@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Animation for form submission */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-indigo-700 mb-2">📚 Library Management System</h1>
+            <p class="text-gray-600">Track student book transactions efficiently</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Form Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">New Transaction</h2>
+                
+                <form id="libraryForm" class="space-y-4">
+                    <!-- Student Information -->
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-user-graduate mr-2 text-indigo-500"></i>
+                            Student Information
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="studentId" class="block text-sm font-medium text-gray-700 mb-1">Student ID</label>
+                                <input type="text" id="studentId" name="studentId" required 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="studentName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="studentName" name="studentName" required 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <label for="course" class="block text-sm font-medium text-gray-700 mb-1">Course/Program</label>
+                            <select id="course" name="course" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="" disabled selected>Select course</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Business Administration">Business Administration</option>
+                                <option value="Nursing">Nursing</option>
+                                <option value="Education">Education</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Information -->
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-book mr-2 text-indigo-500"></i>
+                            Book Details
+                        </h3>
+                        
+                        <div>
+                            <label for="bookTitle" class="block text-sm font-medium text-gray-700 mb-1">Book Title</label>
+                            <input type="text" id="bookTitle" name="bookTitle" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            <div>
+                                <label for="bookAuthor" class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                                <input type="text" id="bookAuthor" name="bookAuthor" required 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="isbn" class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                                <input type="text" id="isbn" name="isbn" 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction Type -->
+                    <div class="border-b border-gray-200 pb-4">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                            <i class="fas fa-exchange-alt mr-2 text-indigo-500"></i>
+                            Transaction Type
+                        </h3>
+                        
+                        <div class="flex space-x-4">
+                            <div class="flex items-center">
+                                <input type="radio" id="checkout" name="transactionType" value="Checkout" checked 
+                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                <label for="checkout" class="ml-2 block text-sm text-gray-700">Checkout</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="return" name="transactionType" value="Return" 
+                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                                <label for="return" class="ml-2 block text-sm text-gray-700">Return</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Date and Time -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 flex items-center">
+                            <i class="far fa-clock mr-2 text-indigo-500"></i>
+                            Date & Time
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="transactionDate" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                <input type="date" id="transactionDate" name="transactionDate" required 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="transactionTime" class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                                <input type="time" id="transactionTime" name="transactionTime" required 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button type="submit" 
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-save mr-2"></i> Record Transaction
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Records Section -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">Transaction Records</h2>
+                    <button id="clearAllBtn" class="text-red-500 hover:text-red-700 text-sm font-medium">
+                        <i class="fas fa-trash-alt mr-1"></i> Clear All
+                    </button>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="searchInput" class="sr-only">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <input type="text" id="searchInput" placeholder="Search records..." 
+                                    class="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="filterType" class="sr-only">Filter</label>
+                            <select id="filterType" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="all">All Transactions</option>
+                                <option value="Checkout">Checkouts Only</option>
+                                <option value="Return">Returns Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Records Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Time</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recordsTable" class="bg-white divide-y divide-gray-200">
+                            <!-- Records will be inserted here by JavaScript -->
+                            <tr id="noRecordsRow">
+                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">No records yet. Add your first transaction!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
+                                <i class="fas fa-book-reader text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Total Transactions</p>
+                                <p id="totalTransactions" class="text-2xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                                <i class="fas fa-sign-out-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Checkouts</p>
+                                <p id="checkoutCount" class="text-2xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                                <i class="fas fa-sign-in-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Returns</p>
+                                <p id="returnCount" class="text-2xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 hidden">
+        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="toastMessage">Transaction recorded successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize records from localStorage
+            let records = JSON.parse(localStorage.getItem('libraryRecords')) || [];
+            updateRecordsTable();
+            updateStatistics();
+            
+            // Set default date and time to current
+            const now = new Date();
+            document.getElementById('transactionDate').valueAsDate = now;
+            document.getElementById('transactionTime').value = now.toTimeString().substring(0, 5);
+            
+            // Form submission
+            document.getElementById('libraryForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const studentId = document.getElementById('studentId').value;
+                const studentName = document.getElementById('studentName').value;
+                const course = document.getElementById('course').value;
+                const bookTitle = document.getElementById('bookTitle').value;
+                const bookAuthor = document.getElementById('bookAuthor').value;
+                const isbn = document.getElementById('isbn').value;
+                const transactionType = document.querySelector('input[name="transactionType"]:checked').value;
+                const transactionDate = document.getElementById('transactionDate').value;
+                const transactionTime = document.getElementById('transactionTime').value;
+                
+                // Create record object
+                const record = {
+                    id: Date.now(),
+                    studentId,
+                    studentName,
+                    course,
+                    bookTitle,
+                    bookAuthor,
+                    isbn,
+                    transactionType,
+                    transactionDate,
+                    transactionTime,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to records
+                records.unshift(record);
+                localStorage.setItem('libraryRecords', JSON.stringify(records));
+                
+                // Update UI
+                updateRecordsTable();
+                updateStatistics();
+                
+                // Show success message
+                showToast('Transaction recorded successfully!');
+                
+                // Reset form (except date/time)
+                this.reset();
+                document.getElementById('transactionDate').valueAsDate = new Date();
+                document.getElementById('transactionTime').value = new Date().toTimeString().substring(0, 5);
+            });
+            
+            // Clear all records
+            document.getElementById('clearAllBtn').addEventListener('click', function() {
+                if (records.length > 0 && confirm('Are you sure you want to delete all records?')) {
+                    records = [];
+                    localStorage.setItem('libraryRecords', JSON.stringify(records));
+                    updateRecordsTable();
+                    updateStatistics();
+                    showToast('All records cleared!');
+                }
+            });
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function() {
+                updateRecordsTable();
+            });
+            
+            // Filter functionality
+            document.getElementById('filterType').addEventListener('change', function() {
+                updateRecordsTable();
+            });
+            
+            // Function to update records table
+            function updateRecordsTable() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const filterType = document.getElementById('filterType').value;
+                
+                // Filter records
+                let filteredRecords = records.filter(record => {
+                    const matchesSearch = 
+                        record.studentId.toLowerCase().includes(searchTerm) ||
+                        record.studentName.toLowerCase().includes(searchTerm) ||
+                        record.bookTitle.toLowerCase().includes(searchTerm) ||
+                        record.bookAuthor.toLowerCase().includes(searchTerm);
+                    
+                    const matchesFilter = filterType === 'all' || record.transactionType === filterType;
+                    
+                    return matchesSearch && matchesFilter;
+                });
+                
+                const tableBody = document.getElementById('recordsTable');
+                const noRecordsRow = document.getElementById('noRecordsRow');
+                
+                // Clear existing rows (except the no records row)
+                tableBody.innerHTML = '';
+                tableBody.appendChild(noRecordsRow);
+                
+                if (filteredRecords.length > 0) {
+                    noRecordsRow.style.display = 'none';
+                    
+                    filteredRecords.forEach(record => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50 fade-in';
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-indigo-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">${record.studentName}</div>
+                                        <div class="text-sm text-gray-500">${record.studentId} • ${record.course}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-medium text-gray-900">${record.bookTitle}</div>
+                                <div class="text-sm text-gray-500">${record.bookAuthor}</div>
+                                ${record.isbn ? `<div class="text-xs text-gray-400">ISBN: ${record.isbn}</div>` : ''}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    ${record.transactionType === 'Checkout' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}">
+                                    ${record.transactionType}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${formatDate(record.transactionDate)}<br>
+                                ${record.transactionTime}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <button onclick="deleteRecord(${record.id})" class="text-red-600 hover:text-red-900 mr-3">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button onclick="editRecord(${record.id})" class="text-indigo-600 hover:text-indigo-900">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    noRecordsRow.style.display = '';
+                }
+            }
+            
+            // Function to update statistics
+            function updateStatistics() {
+                const total = records.length;
+                const checkouts = records.filter(r => r.transactionType === 'Checkout').length;
+                const returns = records.filter(r => r.transactionType === 'Return').length;
+                
+                document.getElementById('totalTransactions').textContent = total;
+                document.getElementById('checkoutCount').textContent = checkouts;
+                document.getElementById('returnCount').textContent = returns;
+            }
+            
+            // Function to show toast notification
+            function showToast(message) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                
+                toastMessage.textContent = message;
+                toast.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 3000);
+            }
+            
+            // Format date for display
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            }
+        });
+        
+        // Global functions for button actions
+        function deleteRecord(id) {
+            let records = JSON.parse(localStorage.getItem('libraryRecords')) || [];
+            records = records.filter(record => record.id !== id);
+            localStorage.setItem('libraryRecords', JSON.stringify(records));
+            
+            // Update UI
+            document.dispatchEvent(new Event('DOMContentLoaded'));
+            document.getElementById('toastMessage').textContent = 'Record deleted successfully!';
+            document.getElementById('toast').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('toast').classList.add('hidden');
+            }, 3000);
+        }
+        
+        function editRecord(id) {
+            let records = JSON.parse(localStorage.getItem('libraryRecords')) || [];
+            const record = records.find(r => r.id === id);
+            
+            if (record) {
+                // Fill the form with record data
+                document.getElementById('studentId').value = record.studentId;
+                document.getElementById('studentName').value = record.studentName;
+                document.getElementById('course').value = record.course;
+                document.getElementById('bookTitle').value = record.bookTitle;
+                document.getElementById('bookAuthor').value = record.bookAuthor;
+                document.getElementById('isbn').value = record.isbn;
+                document.getElementById(record.transactionType.toLowerCase()).checked = true;
+                document.getElementById('transactionDate').value = record.transactionDate;
+                document.getElementById('transactionTime').value = record.transactionTime;
+                
+                // Remove the record (will be re-added when form is submitted)
+                records = records.filter(r => r.id !== id);
+                localStorage.setItem('libraryRecords', JSON.stringify(records));
+                
+                // Update UI
+                document.dispatchEvent(new Event('DOMContentLoaded'));
+                
+                // Scroll to form
+                document.getElementById('libraryForm').scrollIntoView({ behavior: 'smooth' });
+                
+                // Show message
+                document.getElementById('toastMessage').textContent = 'Record loaded for editing!';
+                document.getElementById('toast').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('toast').classList.add('hidden');
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
